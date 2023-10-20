@@ -2,16 +2,17 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { DatePicker } from "../";
 import { MantineProvider, Button, } from "@mantine/core";
 import "@mantine/core/styles.css";
+import { Calendar, DateInput, DatePicker } from "../";
+// import "../dist/index.css"
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <MantineProvider>
+    <MantineProvider  defaultColorScheme="dark">
       <div>
-        <DatePicker />
+        
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -31,6 +32,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <DateInput></DateInput>
       
     </MantineProvider>
   );

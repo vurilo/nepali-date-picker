@@ -11,6 +11,9 @@ dependencies:
   '@mantine/hooks':
     specifier: ^7.1.5
     version: 7.1.5(react@18.2.0)
+  '@vurilo/nepali-date-picker':
+    specifier: ^0.0.2
+    version: 0.0.2(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.0.0
     version: 18.2.0
@@ -4242,6 +4245,20 @@ packages:
     transitivePeerDependencies:
       - typescript
     dev: true
+
+  /@vurilo/nepali-date-picker@0.0.2(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0UTCOVk9NMBHjcqeh9b+whSU45VU/8Z0Akucj1wausSx+pRsqOjCoocEA2tNvKj6FkjiigJm4y0xkMY0Uj/t+Q==}
+    peerDependencies:
+      '@mantine/core': ^7.1.5
+      '@mantine/hooks': ^7.1.5
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@mantine/core': 7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.1.5(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@yarnpkg/esbuild-plugin-pnp@3.0.0-rc.15(esbuild@0.18.20):
     resolution: {integrity: sha512-kYzDJO5CA9sy+on/s2aIW0411AklfCi8Ck/4QDivOqsMKpStZA2SsR+X27VTggGwpStWaLrjJcDcdDMowtG8MA==}

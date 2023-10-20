@@ -1,6 +1,6 @@
 {
   "name": "@vurilo/nepali-date-picker",
-  "description": "Nepali Date Picker for Mantine UI",
+  "description": "Nepali Calendars, date and time pickers based on Mantine components",
   "keywords": [
     "mantine",
     "nepali-dates",
@@ -25,6 +25,15 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./styles.css": "./dist/index.css"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
@@ -81,6 +90,7 @@
   "dependencies": {
     "@mantine/core": "^7.1.5",
     "@mantine/hooks": "^7.1.5",
+    "@vurilo/nepali-date-picker": "^0.0.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   }

@@ -16,7 +16,7 @@ import {
   CalendarHeaderStylesNames,
 } from "../CalendarHeader";
 import { useDatesContext } from "../DatesProvider";
-import NepaliDate, { formatNepaliDate } from "../../utils/nepali-date";
+import { formatNepaliDate } from "../../utils/nepali-date";
 
 export type MonthLevelStylesNames =
   | MonthStylesNames

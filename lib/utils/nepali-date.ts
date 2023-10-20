@@ -17,7 +17,8 @@ export function isSameMonthNepali(date: Date, comparison: Date) {
 export function getMonthDaysNepali(
   month: Date,
   firstDayOfWeek: DayOfWeek = 1,
-  timezone: string | undefined = undefined
+  // @ts-ignore
+  timezone: string | undefined = undefined 
 ): Date[][] {
   const nepaliDate = new NepaliDate(month); // Convert the Gregorian date to Nepali
   const currentYear = nepaliDate.getYear();

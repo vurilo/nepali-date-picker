@@ -16,7 +16,7 @@ import {
 import classes from "./Day.module.css";
 import { shiftTimezone } from "../../utils";
 import { useDatesContext } from "../DatesProvider";
-import nepaliDate, { getNepaliDate } from "../../utils/nepali-date";
+import { getNepaliDate } from "../../utils/nepali-date";
 
 export type DayStylesNames = "day";
 export type DayCssVariables = {

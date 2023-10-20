@@ -18,11 +18,8 @@ dependencies:
     specifier: ^2.39.0
     version: 2.39.0(react@18.2.0)
   '@vurilo/nepali-date-picker':
-    specifier: ^0.0.2
-    version: 0.0.2(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(react-dom@18.2.0)(react@18.2.0)
-  i:
-    specifier: ^0.3.7
-    version: 0.3.7
+    specifier: ^0.0.3
+    version: 0.0.3(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
   nepali-date-converter:
     specifier: ^3.3.1
     version: 3.3.1
@@ -4304,6 +4301,28 @@ packages:
       '@mantine/hooks': 7.1.5(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@vurilo/nepali-date-picker@0.0.3(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-MTmQhWkU9+Xt+zGbc42zN4hhDB4aOevmkdmFw896D1o2AMp1bmf6NeY399bG7TWV485pUutkIvlwiXiu+yA0qA==}
+    peerDependencies:
+      '@mantine/core': ^7.1.5
+      '@mantine/hooks': ^7.1.5
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@mantine/core': 7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/dates': 7.1.5(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.1.5(react@18.2.0)
+      '@tabler/icons-react': 2.39.0(react@18.2.0)
+      '@vurilo/nepali-date-picker': 0.0.2(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(react-dom@18.2.0)(react@18.2.0)
+      i: 0.3.7
+      nepali-date-converter: 3.3.1
+      npm: 10.2.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - dayjs
     dev: false
 
   /@yarnpkg/esbuild-plugin-pnp@3.0.0-rc.15(esbuild@0.18.20):

@@ -1,4 +1,3 @@
-import { IconSun, IconMoon } from "@tabler/icons-react";
 import "./App.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ne";
@@ -6,21 +5,17 @@ import {
   SegmentedControl,
   Card,
   Text,
-  Paper,
   Container,
   Grid,
   useMantineColorScheme,
-  ActionIcon,
   useComputedColorScheme,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import {
-  Calendar,
   DateInput,
-  DatePicker,
   DateValue,
   DatesProvider as NepaliDatesProvider,
-} from "../lib";
+} from "@vurilo/nepali-date-picker";
 import NepaliDate from "nepali-date-converter";
 import { useState } from "react";
 

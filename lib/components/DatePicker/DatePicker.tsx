@@ -38,6 +38,7 @@ export interface DatePickerBaseProps<Type extends DatePickerType = 'default'>
 
   /** Called when level changes */
   onLevelChange?: (level: CalendarLevel) => void;
+  isNepali?: boolean;
 }
 
 export interface DatePickerProps<Type extends DatePickerType = 'default'>
@@ -82,6 +83,7 @@ export const DatePicker: DatePickerComponent = factory<DatePickerFactory>((_prop
     __onDayMouseEnter,
     __onDayClick,
     __timezoneApplied,
+    isNepali,
     ...others
   } = props;
 
@@ -128,10 +130,11 @@ export const DatePicker: DatePickerComponent = factory<DatePickerFactory>((_prop
       })}
       {...others}
       date={shiftTimezone('add', others.date, ctx.getTimezone(), __timezoneApplied)}
+      isNepali={isNepali}
       __timezoneApplied
     />
   );
 }) as any;
 
 DatePicker.classes = Calendar.classes;
-DatePicker.displayName = '@mantine/dates/DatePicker';
+DatePicker.displayName = '@vurilo/dates/DatePicker';

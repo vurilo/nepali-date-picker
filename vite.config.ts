@@ -16,7 +16,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["react", "react/jsx-runtime", "@mantine/core", "@mantine/hooks"],
+      external: ["react", "react/jsx-runtime", "@mantine/core", "@mantine/hooks", "dayjs"],
       // input: Object.fromEntries(
       //   glob.sync("lib/**/*.{ts,tsx}").map((file) => [
       //     // The name of the entry point

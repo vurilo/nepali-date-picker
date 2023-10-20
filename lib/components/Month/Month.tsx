@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import React from 'react';
+import dayjs from "dayjs";
+import React from "react";
 import {
   Box,
   BoxProps,
@@ -11,27 +11,28 @@ import {
   Factory,
   MantineSize,
   useResolvedStylesApi,
-} from '@mantine/core';
-import { ControlKeydownPayload, DayOfWeek } from '../../types';
-import { Day, DayProps, DayStylesNames } from '../Day';
-import { getMonthDays } from './get-month-days/get-month-days';
-import { useDatesContext } from '../DatesProvider';
-import { getDateInTabOrder } from './get-date-in-tab-order/get-date-in-tab-order';
-import { isSameMonth } from './is-same-month/is-same-month';
-import { isBeforeMaxDate } from './is-before-max-date/is-before-max-date';
-import { isAfterMinDate } from './is-after-min-date/is-after-min-date';
-import { WeekdaysRow } from '../WeekdaysRow';
-import classes from './Month.module.css';
+} from "@mantine/core";
+import { ControlKeydownPayload, DayOfWeek } from "../../types";
+import { Day, DayProps, DayStylesNames } from "../Day";
+import { getMonthDays } from "./get-month-days/get-month-days";
+import { useDatesContext } from "../DatesProvider";
+import { getDateInTabOrder } from "./get-date-in-tab-order/get-date-in-tab-order";
+import { isSameMonth } from "./is-same-month/is-same-month";
+import { isBeforeMaxDate } from "./is-before-max-date/is-before-max-date";
+import { isAfterMinDate } from "./is-after-min-date/is-after-min-date";
+import { WeekdaysRow } from "../WeekdaysRow";
+import classes from "./Month.module.css";
+import { formatNepaliDate, getMonthDaysNepali, isSameMonthNepali } from "../../utils/nepali-date";
 
 export type MonthStylesNames =
-  | 'month'
-  | 'weekday'
-  | 'weekdaysRow'
-  | 'monthRow'
-  | 'month'
-  | 'monthThead'
-  | 'monthTbody'
-  | 'monthCell'
+  | "month"
+  | "weekday"
+  | "weekdaysRow"
+  | "monthRow"
+  | "month"
+  | "monthThead"
+  | "monthTbody"
+  | "monthCell"
   | DayStylesNames;
 
 export interface MonthSettings {
@@ -42,10 +43,16 @@ export interface MonthSettings {
   __preventFocus?: boolean;
 
   /** Called when day is clicked with click event and date */
-  __onDayClick?: (event: React.MouseEvent<HTMLButtonElement>, date: Date) => void;
+  __onDayClick?: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    date: Date
+  ) => void;
 
   /** Called when mouse enters day */
-  __onDayMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, date: Date) => void;
+  __onDayMouseEnter?: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    date: Date
+  ) => void;
 
   /** Called when any keydown event is registered on day, used for arrows navigation */
   __onDayKeyDown?: (
@@ -54,7 +61,11 @@ export interface MonthSettings {
   ) => void;
 
   /** Assigns ref of every day based on its position in the table, used for arrows navigation */
-  __getDayRef?: (rowIndex: number, cellIndex: number, node: HTMLButtonElement) => void;
+  __getDayRef?: (
+    rowIndex: number,
+    cellIndex: number,
+    node: HTMLButtonElement
+  ) => void;
 
   /** dayjs locale, defaults to value defined in DatesProvider */
   locale?: string;
@@ -69,7 +80,9 @@ export interface MonthSettings {
   weekendDays?: DayOfWeek[];
 
   /** Adds props to Day component based on date */
-  getDayProps?: (date: Date) => Omit<Partial<DayProps>, 'classNames' | 'styles' | 'vars'>;
+  getDayProps?: (
+    date: Date
+  ) => Omit<Partial<DayProps>, "classNames" | "styles" | "vars">;
 
   /** Callback function to determine whether the day should be disabled */
   excludeDate?: (date: Date) => boolean;
@@ -103,7 +116,7 @@ export interface MonthProps
   extends BoxProps,
     MonthSettings,
     StylesApiProps<MonthFactory>,
-    ElementProps<'div'> {
+    ElementProps<"div"> {
   __staticSelector?: string;
 
   /** Month to display */
@@ -111,6 +124,7 @@ export interface MonthProps
 
   /** Determines whether days should be static, static days can be used to display month if it is not expected that user will interact with the component in any way  */
   static?: boolean;
+  isNepali?: boolean;
 }
 
 export type MonthFactory = Factory<{
@@ -124,8 +138,9 @@ const defaultProps: Partial<MonthProps> = {
 };
 
 export const Month = factory<MonthFactory>((_props, ref) => {
-  const props = useProps('Month', defaultProps, _props);
+  const props = useProps("Month", defaultProps, _props);
   const {
+    isNepali,
     classNames,
     className,
     style,
@@ -159,7 +174,7 @@ export const Month = factory<MonthFactory>((_props, ref) => {
   } = props;
 
   const getStyles = useStyles<MonthFactory>({
-    name: __staticSelector || 'Month',
+    name: __staticSelector || "Month",
     classes,
     props,
     className,
@@ -168,11 +183,11 @@ export const Month = factory<MonthFactory>((_props, ref) => {
     styles,
     unstyled,
     vars,
-    rootSelector: 'month',
+    rootSelector: "month",
   });
 
   const ctx = useDatesContext();
-  const dates = getMonthDays(month, ctx.getFirstDayOfWeek(firstDayOfWeek));
+  const dates = isNepali ? getMonthDaysNepali(month, ctx.getFirstDayOfWeek(firstDayOfWeek)) : getMonthDays(month, ctx.getFirstDayOfWeek(firstDayOfWeek));
 
   const dateInTabOrder = getDateInTabOrder(
     dates,
@@ -184,31 +199,35 @@ export const Month = factory<MonthFactory>((_props, ref) => {
     month
   );
 
-  const { resolvedClassNames, resolvedStyles } = useResolvedStylesApi<MonthFactory>({
-    classNames,
-    styles,
-    props,
-  });
+  const { resolvedClassNames, resolvedStyles } =
+    useResolvedStylesApi<MonthFactory>({
+      classNames,
+      styles,
+      props,
+    });
 
   const rows = dates.map((row, rowIndex) => {
     const cells = row.map((date, cellIndex) => {
-      const outside = !isSameMonth(date, month);
+      const outside = isNepali
+        ? !isSameMonthNepali(date, month)
+        : !isSameMonth(date, month);
       const ariaLabel =
-        getDayAriaLabel?.(date) ||
-        dayjs(date)
-          .locale(locale || ctx.locale)
-          .format('D MMMM YYYY');
+        getDayAriaLabel?.(date) || isNepali
+          ? formatNepaliDate(date, "D MMMM YYYY", locale || ctx.locale)
+          : dayjs(date)
+              .locale(locale || ctx.locale)
+              .format("D MMMM YYYY");
       const dayProps = getDayProps?.(date);
-      const isDateInTabOrder = dayjs(date).isSame(dateInTabOrder, 'date');
+      const isDateInTabOrder = dayjs(date).isSame(dateInTabOrder, "date");
 
       return (
         <td
           key={date.toString()}
-          {...getStyles('monthCell')}
+          {...getStyles("monthCell")}
           data-with-spacing={withCellSpacing || undefined}
         >
           <Day
-            __staticSelector={__staticSelector || 'Month'}
+            __staticSelector={__staticSelector || "Month"}
             classNames={resolvedClassNames}
             styles={resolvedStyles}
             unstyled={unstyled}
@@ -216,7 +235,9 @@ export const Month = factory<MonthFactory>((_props, ref) => {
             renderDay={renderDay}
             date={date}
             size={size}
-            weekend={ctx.getWeekendDays(weekendDays).includes(date.getDay() as DayOfWeek)}
+            weekend={ctx
+              .getWeekendDays(weekendDays)
+              .includes(date.getDay() as DayOfWeek)}
             outside={outside}
             hidden={hideOutsideDates ? outside : false}
             aria-label={ariaLabel}
@@ -245,24 +266,31 @@ export const Month = factory<MonthFactory>((_props, ref) => {
               __preventFocus && event.preventDefault();
             }}
             tabIndex={__preventFocus || !isDateInTabOrder ? -1 : 0}
+            isNepali={isNepali}
           />
         </td>
       );
     });
 
     return (
-      <tr key={rowIndex} {...getStyles('monthRow')}>
+      <tr key={rowIndex} {...getStyles("monthRow")}>
         {cells}
       </tr>
     );
   });
 
   return (
-    <Box component="table" {...getStyles('month')} size={size} ref={ref} {...others}>
+    <Box
+      component="table"
+      {...getStyles("month")}
+      size={size}
+      ref={ref}
+      {...others}
+    >
       {!hideWeekdays && (
-        <thead {...getStyles('monthThead')}>
+        <thead {...getStyles("monthThead")}>
           <WeekdaysRow
-            __staticSelector={__staticSelector || 'Month'}
+            __staticSelector={__staticSelector || "Month"}
             locale={locale}
             firstDayOfWeek={firstDayOfWeek}
             weekdayFormat={weekdayFormat}
@@ -273,10 +301,10 @@ export const Month = factory<MonthFactory>((_props, ref) => {
           />
         </thead>
       )}
-      <tbody {...getStyles('monthTbody')}>{rows}</tbody>
+      <tbody {...getStyles("monthTbody")}>{rows}</tbody>
     </Box>
   );
 });
 
 Month.classes = classes;
-Month.displayName = '@mantine/dates/Month';
+Month.displayName = "@mantine/dates/Month";

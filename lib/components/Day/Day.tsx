@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import React from 'react';
+import dayjs from "dayjs";
+import React from "react";
 import {
   BoxProps,
   StylesApiProps,
@@ -12,17 +12,21 @@ import {
   MantineSize,
   UnstyledButton,
   getSize,
-} from '@mantine/core';
-import classes from './Day.module.css';
-import { shiftTimezone } from '../../utils';
-import { useDatesContext } from '../DatesProvider';
+} from "@mantine/core";
+import classes from "./Day.module.css";
+import { shiftTimezone } from "../../utils";
+import { useDatesContext } from "../DatesProvider";
+import nepaliDate, { getNepaliDate } from "../../utils/nepali-date";
 
-export type DayStylesNames = 'day';
+export type DayStylesNames = "day";
 export type DayCssVariables = {
-  day: '--day-size';
+  day: "--day-size";
 };
 
-export interface DayProps extends BoxProps, StylesApiProps<DayFactory>, ElementProps<'button'> {
+export interface DayProps
+  extends BoxProps,
+    StylesApiProps<DayFactory>,
+    ElementProps<"button"> {
   __staticSelector?: string;
 
   /** Determines which element should be used as root, `'button'` by default, `'div'` if static prop is set */
@@ -57,6 +61,8 @@ export interface DayProps extends BoxProps, StylesApiProps<DayFactory>, ElementP
 
   /** Controls day value rendering */
   renderDay?: (date: Date) => React.ReactNode;
+
+  isNepali?: boolean;
 }
 
 export type DayFactory = Factory<{
@@ -70,13 +76,14 @@ const defaultProps: Partial<DayProps> = {};
 
 const varsResolver = createVarsResolver<DayFactory>((_, { size }) => ({
   day: {
-    '--day-size': getSize(size, 'day-size'),
+    "--day-size": getSize(size, "day-size"),
   },
 }));
 
 export const Day = factory<DayFactory>((_props, ref) => {
-  const props = useProps('Day', defaultProps, _props);
+  const props = useProps("Day", defaultProps, _props);
   const {
+    isNepali,
     classNames,
     className,
     style,
@@ -99,7 +106,7 @@ export const Day = factory<DayFactory>((_props, ref) => {
   } = props;
 
   const getStyles = useStyles<DayFactory>({
-    name: __staticSelector || 'Day',
+    name: __staticSelector || "Day",
     classes,
     props,
     className,
@@ -109,19 +116,22 @@ export const Day = factory<DayFactory>((_props, ref) => {
     unstyled,
     vars,
     varsResolver,
-    rootSelector: 'day',
+    rootSelector: "day",
   });
 
   const ctx = useDatesContext();
 
   return (
     <UnstyledButton<any>
-      {...getStyles('day')}
-      component={isStatic ? 'div' : 'button'}
+      {...getStyles("day")}
+      component={isStatic ? "div" : "button"}
       ref={ref}
       disabled={disabled}
       data-today={
-        dayjs(date).isSame(shiftTimezone('add', new Date(), ctx.getTimezone()), 'day') || undefined
+        dayjs(date).isSame(
+          shiftTimezone("add", new Date(), ctx.getTimezone()),
+          "day"
+        ) || undefined
       }
       data-hidden={hidden || undefined}
       data-disabled={disabled || undefined}
@@ -135,10 +145,10 @@ export const Day = factory<DayFactory>((_props, ref) => {
       unstyled={unstyled}
       {...others}
     >
-      {renderDay?.(date) || date.getDate()}
+      {renderDay?.(date) || isNepali ? getNepaliDate(date) : date.getDate()}
     </UnstyledButton>
   );
 });
 
 Day.classes = classes;
-Day.displayName = '@mantine/dates/Day';
+Day.displayName = "@mantine/dates/Day";

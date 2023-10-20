@@ -8,21 +8,22 @@ import {
   useStyles,
   Factory,
   MantineSize,
-} from '@mantine/core';
-import dayjs from 'dayjs';
-import { ControlsGroupSettings } from '../../types';
-import { PickerControl, PickerControlProps } from '../PickerControl';
-import { useDatesContext } from '../DatesProvider';
-import classes from './MonthsList.module.css';
-import { getMonthsData } from './get-months-data/get-months-data';
-import { getMonthInTabOrder } from './get-month-in-tab-order/get-month-in-tab-order';
-import { isMonthDisabled } from './is-month-disabled/is-month-disabled';
+} from "@mantine/core";
+import dayjs from "dayjs";
+import { ControlsGroupSettings } from "../../types";
+import { PickerControl, PickerControlProps } from "../PickerControl";
+import { useDatesContext } from "../DatesProvider";
+import classes from "./MonthsList.module.css";
+import { getMonthsData } from "./get-months-data/get-months-data";
+import { getMonthInTabOrder } from "./get-month-in-tab-order/get-month-in-tab-order";
+import { isMonthDisabled } from "./is-month-disabled/is-month-disabled";
+import { formatNepaliDate } from "../../utils/nepali-date";
 
 export type MonthsListStylesNames =
-  | 'monthsList'
-  | 'monthsListCell'
-  | 'monthsListRow'
-  | 'monthsListControl';
+  | "monthsList"
+  | "monthsListCell"
+  | "monthsListRow"
+  | "monthsListControl";
 
 export interface MonthsListSettings extends ControlsGroupSettings {
   /** dayjs format for months list  */
@@ -36,13 +37,15 @@ export interface MonthsListSettings extends ControlsGroupSettings {
 
   /** Determines whether controls should be separated by spacing, true by default */
   withCellSpacing?: boolean;
+
+  isNepali?: boolean;
 }
 
 export interface MonthsListProps
   extends BoxProps,
     MonthsListSettings,
     StylesApiProps<MonthsListFactory>,
-    ElementProps<'table'> {
+    ElementProps<"table"> {
   __staticSelector?: string;
 
   /** Prevents focus shift when buttons are clicked */
@@ -62,13 +65,14 @@ export type MonthsListFactory = Factory<{
 }>;
 
 const defaultProps: Partial<MonthsListProps> = {
-  monthsListFormat: 'MMM',
+  monthsListFormat: "MMM",
   withCellSpacing: true,
 };
 
 export const MonthsList = factory<MonthsListFactory>((_props, ref) => {
-  const props = useProps('MonthsList', defaultProps, _props);
+  const props = useProps("MonthsList", defaultProps, _props);
   const {
+    isNepali,
     classNames,
     className,
     style,
@@ -94,7 +98,7 @@ export const MonthsList = factory<MonthsListFactory>((_props, ref) => {
   } = props;
 
   const getStyles = useStyles<MonthsListFactory>({
-    name: __staticSelector || 'MonthsList',
+    name: __staticSelector || "MonthsList",
     classes,
     props,
     className,
@@ -103,30 +107,35 @@ export const MonthsList = factory<MonthsListFactory>((_props, ref) => {
     styles,
     unstyled,
     vars,
-    rootSelector: 'monthsList',
+    rootSelector: "monthsList",
   });
 
   const ctx = useDatesContext();
 
-  const months = getMonthsData(year);
+  const months = isNepali ? getMonthsData(year) : getMonthsData(year);
 
-  const monthInTabOrder = getMonthInTabOrder(months, minDate, maxDate, getMonthControlProps);
+  const monthInTabOrder = getMonthInTabOrder(
+    months,
+    minDate,
+    maxDate,
+    getMonthControlProps
+  );
 
   const rows = months.map((monthsRow, rowIndex) => {
     const cells = monthsRow.map((month, cellIndex) => {
       const controlProps = getMonthControlProps?.(month);
-      const isMonthInTabOrder = dayjs(month).isSame(monthInTabOrder, 'month');
+      const isMonthInTabOrder = dayjs(month).isSame(monthInTabOrder, "month");
       return (
         <td
           key={cellIndex}
-          {...getStyles('monthsListCell')}
+          {...getStyles("monthsListCell")}
           data-with-spacing={withCellSpacing || undefined}
         >
           <PickerControl
-            {...getStyles('monthsListControl')}
+            {...getStyles("monthsListControl")}
             size={size}
             unstyled={unstyled}
-            __staticSelector={__staticSelector || 'MonthsList'}
+            __staticSelector={__staticSelector || "MonthsList"}
             data-mantine-stop-propagation={__stopPropagation || undefined}
             disabled={isMonthDisabled(month, minDate, maxDate)}
             ref={(node) => __getControlRef?.(rowIndex, cellIndex, node!)}
@@ -149,25 +158,35 @@ export const MonthsList = factory<MonthsListFactory>((_props, ref) => {
             }}
             tabIndex={__preventFocus || !isMonthInTabOrder ? -1 : 0}
           >
-            {dayjs(month).locale(ctx.getLocale(locale)).format(monthsListFormat)}
+            {isNepali
+              ? formatNepaliDate(month, monthsListFormat, ctx.getLocale(locale))
+              : dayjs(month)
+                  .locale(ctx.getLocale(locale))
+                  .format(monthsListFormat)}
           </PickerControl>
         </td>
       );
     });
 
     return (
-      <tr key={rowIndex} {...getStyles('monthsListRow')}>
+      <tr key={rowIndex} {...getStyles("monthsListRow")}>
         {cells}
       </tr>
     );
   });
 
   return (
-    <Box component="table" ref={ref} size={size} {...getStyles('monthsList')} {...others}>
+    <Box
+      component="table"
+      ref={ref}
+      size={size}
+      {...getStyles("monthsList")}
+      {...others}
+    >
       <tbody>{rows}</tbody>
     </Box>
   );
 });
 
 MonthsList.classes = classes;
-MonthsList.displayName = '@mantine/dates/MonthsList';
+MonthsList.displayName = "@mantine/dates/MonthsList";

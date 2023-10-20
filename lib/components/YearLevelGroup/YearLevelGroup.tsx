@@ -24,6 +24,8 @@ export interface YearLevelGroupProps
 
   /** Function that returns level control aria-label based on year date */
   levelControlAriaLabel?: ((year: Date) => string) | string;
+
+  isNepali?: boolean;
 }
 
 export type YearLevelGroupFactory = Factory<{
@@ -40,6 +42,7 @@ export const YearLevelGroup = factory<YearLevelGroupFactory>((_props, ref) => {
   const props = useProps('YearLevelGroup', defaultProps, _props);
   const {
     // YearLevel settings
+    isNepali,
     year,
     locale,
     minDate,
@@ -141,6 +144,7 @@ export const YearLevelGroup = factory<YearLevelGroupFactory>((_props, ref) => {
           unstyled={unstyled}
           __staticSelector={__staticSelector || 'YearLevelGroup'}
           withCellSpacing={withCellSpacing}
+          isNepali={isNepali}
         />
       );
     });

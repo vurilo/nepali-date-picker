@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   BoxProps,
@@ -7,30 +7,39 @@ import {
   ElementProps,
   useProps,
   Factory,
-} from '@mantine/core';
-import dayjs from 'dayjs';
+} from "@mantine/core";
+import dayjs from "dayjs";
 import {
   CalendarHeader,
   CalendarHeaderStylesNames,
   CalendarHeaderSettings,
-} from '../CalendarHeader';
-import { useDatesContext } from '../DatesProvider';
-import { MonthsListSettings, MonthsListStylesNames, MonthsList } from '../MonthsList';
+} from "../CalendarHeader";
+import { useDatesContext } from "../DatesProvider";
+import {
+  MonthsListSettings,
+  MonthsListStylesNames,
+  MonthsList,
+} from "../MonthsList";
+import { formatNepaliDate } from "../../utils/nepali-date";
 
-export type YearLevelStylesNames = MonthsListStylesNames | CalendarHeaderStylesNames;
+export type YearLevelStylesNames =
+  | MonthsListStylesNames
+  | CalendarHeaderStylesNames;
 
 export interface YearLevelBaseSettings extends MonthsListSettings {
   /** dayjs label format to display year label or a function that returns year label based on year value, defaults to "YYYY" */
   yearLabelFormat?: string | ((year: Date) => React.ReactNode);
 }
 
-export interface YearLevelSettings extends YearLevelBaseSettings, CalendarHeaderSettings {}
+export interface YearLevelSettings
+  extends YearLevelBaseSettings,
+    CalendarHeaderSettings {}
 
 export interface YearLevelProps
   extends BoxProps,
     YearLevelSettings,
-    Omit<StylesApiProps<YearLevelFactory>, 'classNames' | 'styles'>,
-    ElementProps<'div'> {
+    Omit<StylesApiProps<YearLevelFactory>, "classNames" | "styles">,
+    ElementProps<"div"> {
   classNames?: Partial<Record<string, string>>;
   styles?: Partial<Record<string, React.CSSProperties>>;
   __staticSelector?: string;
@@ -40,6 +49,8 @@ export interface YearLevelProps
 
   /** aria-label for change level control */
   levelControlAriaLabel?: string;
+
+  isNepali?: boolean;
 }
 
 export type YearLevelFactory = Factory<{
@@ -49,13 +60,14 @@ export type YearLevelFactory = Factory<{
 }>;
 
 const defaultProps: Partial<YearLevelProps> = {
-  yearLabelFormat: 'YYYY',
+  yearLabelFormat: "YYYY",
 };
 
 export const YearLevel = factory<YearLevelFactory>((_props, ref) => {
-  const props = useProps('YearLevel', defaultProps, _props);
+  const props = useProps("YearLevel", defaultProps, _props);
   const {
     // MonthsList settings
+    isNepali,
     year,
     locale,
     minDate,
@@ -98,7 +110,7 @@ export const YearLevel = factory<YearLevelFactory>((_props, ref) => {
   const ctx = useDatesContext();
 
   const stylesApiProps = {
-    __staticSelector: __staticSelector || 'YearLevel',
+    __staticSelector: __staticSelector || "YearLevel",
     classNames,
     styles,
     unstyled,
@@ -106,25 +118,27 @@ export const YearLevel = factory<YearLevelFactory>((_props, ref) => {
   };
 
   const _nextDisabled =
-    typeof nextDisabled === 'boolean'
+    typeof nextDisabled === "boolean"
       ? nextDisabled
       : maxDate
-      ? !dayjs(year).endOf('year').isBefore(maxDate)
+      ? !dayjs(year).endOf("year").isBefore(maxDate)
       : false;
 
   const _previousDisabled =
-    typeof previousDisabled === 'boolean'
+    typeof previousDisabled === "boolean"
       ? previousDisabled
       : minDate
-      ? !dayjs(year).startOf('year').isAfter(minDate)
+      ? !dayjs(year).startOf("year").isAfter(minDate)
       : false;
 
   return (
     <Box data-year-level size={size} ref={ref} {...others}>
       <CalendarHeader
         label={
-          typeof yearLabelFormat === 'function'
+          typeof yearLabelFormat === "function"
             ? yearLabelFormat(year)
+            : isNepali
+            ? formatNepaliDate(year, yearLabelFormat, locale || ctx.locale)
             : dayjs(year)
                 .locale(locale || ctx.locale)
                 .format(yearLabelFormat)
@@ -144,6 +158,7 @@ export const YearLevel = factory<YearLevelFactory>((_props, ref) => {
         levelControlAriaLabel={levelControlAriaLabel}
         withNext={withNext}
         withPrevious={withPrevious}
+        isNepali={isNepali}
         {...stylesApiProps}
       />
 
@@ -161,6 +176,7 @@ export const YearLevel = factory<YearLevelFactory>((_props, ref) => {
         __preventFocus={__preventFocus}
         __stopPropagation={__stopPropagation}
         withCellSpacing={withCellSpacing}
+        isNepali={isNepali}
         {...stylesApiProps}
       />
     </Box>
@@ -168,4 +184,4 @@ export const YearLevel = factory<YearLevelFactory>((_props, ref) => {
 });
 
 YearLevel.classes = { ...CalendarHeader.classes, ...MonthsList.classes };
-YearLevel.displayName = '@mantine/dates/YearLevel';
+YearLevel.displayName = "@mantine/dates/YearLevel";

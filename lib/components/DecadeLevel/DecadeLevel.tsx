@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   BoxProps,
@@ -7,33 +7,42 @@ import {
   ElementProps,
   useProps,
   Factory,
-} from '@mantine/core';
-import dayjs from 'dayjs';
-import { YearsList, YearsListSettings, YearsListStylesNames } from '../YearsList';
+} from "@mantine/core";
+import dayjs from "dayjs";
+import {
+  YearsList,
+  YearsListSettings,
+  YearsListStylesNames,
+} from "../YearsList";
 import {
   CalendarHeader,
   CalendarHeaderSettings,
   CalendarHeaderStylesNames,
-} from '../CalendarHeader';
-import { useDatesContext } from '../DatesProvider';
-import { getDecadeRange } from './get-decade-range/get-decade-range';
+} from "../CalendarHeader";
+import { useDatesContext } from "../DatesProvider";
+import { getDecadeRange } from "./get-decade-range/get-decade-range";
+import { formatNepaliDate } from "../../utils/nepali-date";
 
-export type DecadeLevelStylesNames = YearsListStylesNames | CalendarHeaderStylesNames;
+export type DecadeLevelStylesNames =
+  | YearsListStylesNames
+  | CalendarHeaderStylesNames;
 
 export interface DecadeLevelBaseSettings extends YearsListSettings {
   /** dayjs label format to display decade label or a function that returns decade label based on date value, defaults to "YYYY" */
-  decadeLabelFormat?: string | ((startOfDecade: Date, endOfDecade: Date) => React.ReactNode);
+  decadeLabelFormat?:
+    | string
+    | ((startOfDecade: Date, endOfDecade: Date) => React.ReactNode);
 }
 
 export interface DecadeLevelSettings
   extends DecadeLevelBaseSettings,
-    Omit<CalendarHeaderSettings, 'onLevelClick' | 'hasNextLevel'> {}
+    Omit<CalendarHeaderSettings, "onLevelClick" | "hasNextLevel"> {}
 
 export interface DecadeLevelProps
   extends BoxProps,
     DecadeLevelSettings,
-    Omit<StylesApiProps<DecadeLevelFactory>, 'classNames' | 'styles'>,
-    ElementProps<'div'> {
+    Omit<StylesApiProps<DecadeLevelFactory>, "classNames" | "styles">,
+    ElementProps<"div"> {
   classNames?: Partial<Record<string, string>>;
   styles?: Partial<Record<string, React.CSSProperties>>;
   __staticSelector?: string;
@@ -43,6 +52,8 @@ export interface DecadeLevelProps
 
   /** aria-label for change level control */
   levelControlAriaLabel?: string;
+
+  isNepali?: boolean;
 }
 
 export type DecadeLevelFactory = Factory<{
@@ -52,13 +63,14 @@ export type DecadeLevelFactory = Factory<{
 }>;
 
 const defaultProps: Partial<DecadeLevelProps> = {
-  decadeLabelFormat: 'YYYY',
+  decadeLabelFormat: "YYYY",
 };
 
 export const DecadeLevel = factory<DecadeLevelFactory>((_props, ref) => {
-  const props = useProps('DecadeLevel', defaultProps, _props);
+  const props = useProps("DecadeLevel", defaultProps, _props);
   const {
     // YearsList settings
+    isNepali,
     decade,
     locale,
     minDate,
@@ -100,7 +112,7 @@ export const DecadeLevel = factory<DecadeLevelFactory>((_props, ref) => {
   const [startOfDecade, endOfDecade] = getDecadeRange(decade);
 
   const stylesApiProps = {
-    __staticSelector: __staticSelector || 'DecadeLevel',
+    __staticSelector: __staticSelector || "DecadeLevel",
     classNames,
     styles,
     unstyled,
@@ -108,17 +120,17 @@ export const DecadeLevel = factory<DecadeLevelFactory>((_props, ref) => {
   };
 
   const _nextDisabled =
-    typeof nextDisabled === 'boolean'
+    typeof nextDisabled === "boolean"
       ? nextDisabled
       : maxDate
-      ? !dayjs(endOfDecade).endOf('year').isBefore(maxDate)
+      ? !dayjs(endOfDecade).endOf("year").isBefore(maxDate)
       : false;
 
   const _previousDisabled =
-    typeof previousDisabled === 'boolean'
+    typeof previousDisabled === "boolean"
       ? previousDisabled
       : minDate
-      ? !dayjs(startOfDecade).startOf('year').isAfter(minDate)
+      ? !dayjs(startOfDecade).startOf("year").isAfter(minDate)
       : false;
 
   const formatDecade = (date: Date, format: string) =>
@@ -130,12 +142,22 @@ export const DecadeLevel = factory<DecadeLevelFactory>((_props, ref) => {
     <Box data-decade-level size={size} ref={ref} {...others}>
       <CalendarHeader
         label={
-          typeof decadeLabelFormat === 'function'
+          typeof decadeLabelFormat === "function"
             ? decadeLabelFormat(startOfDecade, endOfDecade)
-            : `${formatDecade(startOfDecade, decadeLabelFormat!)} – ${formatDecade(
+            : isNepali
+            ? `${formatNepaliDate(
+                startOfDecade,
+                decadeLabelFormat!,
+                locale || ctx.locale
+              )} – ${formatNepaliDate(
                 endOfDecade,
-                decadeLabelFormat!
+                decadeLabelFormat!,
+                locale || ctx.locale
               )}`
+            : `${formatDecade(
+                startOfDecade,
+                decadeLabelFormat!
+              )} – ${formatDecade(endOfDecade, decadeLabelFormat!)}`
         }
         __preventFocus={__preventFocus}
         __stopPropagation={__stopPropagation}
@@ -168,6 +190,7 @@ export const DecadeLevel = factory<DecadeLevelFactory>((_props, ref) => {
         __preventFocus={__preventFocus}
         __stopPropagation={__stopPropagation}
         withCellSpacing={withCellSpacing}
+        isNepali={isNepali}
         {...stylesApiProps}
       />
     </Box>
@@ -175,4 +198,4 @@ export const DecadeLevel = factory<DecadeLevelFactory>((_props, ref) => {
 });
 
 DecadeLevel.classes = { ...YearsList.classes, ...CalendarHeader.classes };
-DecadeLevel.displayName = '@mantine/dates/DecadeLevel';
+DecadeLevel.displayName = "@mantine/dates/DecadeLevel";

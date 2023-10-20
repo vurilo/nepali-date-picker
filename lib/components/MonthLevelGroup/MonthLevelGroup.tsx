@@ -27,6 +27,8 @@ export interface MonthLevelGroupProps
 
   /** Determines whether days should be static, static days can be used to display month if it is not expected that user will interact with the component in any way  */
   static?: boolean;
+
+  isNepali?: boolean;
 }
 
 export type MonthLevelGroupFactory = Factory<{
@@ -43,6 +45,7 @@ export const MonthLevelGroup = factory<MonthLevelGroupFactory>((_props, ref) => 
   const props = useProps('MonthLevelGroup', defaultProps, _props);
   const {
     // Month settings
+    isNepali,
     month,
     locale,
     firstDayOfWeek,
@@ -160,6 +163,7 @@ export const MonthLevelGroup = factory<MonthLevelGroupFactory>((_props, ref) => 
           size={size}
           static={isStatic}
           withCellSpacing={withCellSpacing}
+          isNepali={isNepali}
         />
       );
     });

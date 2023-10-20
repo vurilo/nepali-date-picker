@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import {
   Box,
   BoxProps,
@@ -9,20 +9,21 @@ import {
   useStyles,
   Factory,
   MantineSize,
-} from '@mantine/core';
-import { ControlsGroupSettings } from '../../types';
-import { PickerControl, PickerControlProps } from '../PickerControl';
-import { getYearsData } from './get-years-data/get-years-data';
-import { getYearInTabOrder } from './get-year-in-tab-order/get-year-in-tab-order';
-import { useDatesContext } from '../DatesProvider';
-import { isYearDisabled } from './is-year-disabled/is-year-disabled';
-import classes from './YearsList.module.css';
+} from "@mantine/core";
+import { ControlsGroupSettings } from "../../types";
+import { PickerControl, PickerControlProps } from "../PickerControl";
+import { getYearsData } from "./get-years-data/get-years-data";
+import { getYearInTabOrder } from "./get-year-in-tab-order/get-year-in-tab-order";
+import { useDatesContext } from "../DatesProvider";
+import { isYearDisabled } from "./is-year-disabled/is-year-disabled";
+import classes from "./YearsList.module.css";
+import { formatNepaliDate } from "../../utils/nepali-date";
 
 export type YearsListStylesNames =
-  | 'yearsListControl'
-  | 'yearsList'
-  | 'yearsListCell'
-  | 'yearsListRow';
+  | "yearsListControl"
+  | "yearsList"
+  | "yearsListCell"
+  | "yearsListRow";
 
 export interface YearsListSettings extends ControlsGroupSettings {
   /** Prevents focus shift when buttons are clicked */
@@ -42,13 +43,15 @@ export interface YearsListSettings extends ControlsGroupSettings {
 
   /** Determines whether controls should be separated by spacing, true by default */
   withCellSpacing?: boolean;
+
+  isNepali?: boolean;
 }
 
 export interface YearsListProps
   extends BoxProps,
     YearsListSettings,
     StylesApiProps<YearsListFactory>,
-    ElementProps<'table'> {
+    ElementProps<"table"> {
   __staticSelector?: string;
 
   /** Decade for which years list should be displayed */
@@ -62,13 +65,14 @@ export type YearsListFactory = Factory<{
 }>;
 
 const defaultProps: Partial<YearsListProps> = {
-  yearsListFormat: 'YYYY',
+  yearsListFormat: "YYYY",
   withCellSpacing: true,
 };
 
 export const YearsList = factory<YearsListFactory>((_props, ref) => {
-  const props = useProps('YearsList', defaultProps, _props);
+  const props = useProps("YearsList", defaultProps, _props);
   const {
+    isNepali,
     classNames,
     className,
     style,
@@ -94,7 +98,7 @@ export const YearsList = factory<YearsListFactory>((_props, ref) => {
   } = props;
 
   const getStyles = useStyles<YearsListFactory>({
-    name: __staticSelector || 'YearsList',
+    name: __staticSelector || "YearsList",
     classes,
     props,
     className,
@@ -103,27 +107,32 @@ export const YearsList = factory<YearsListFactory>((_props, ref) => {
     styles,
     unstyled,
     vars,
-    rootSelector: 'yearsList',
+    rootSelector: "yearsList",
   });
 
   const ctx = useDatesContext();
 
   const years = getYearsData(decade);
 
-  const yearInTabOrder = getYearInTabOrder(years, minDate, maxDate, getYearControlProps);
+  const yearInTabOrder = getYearInTabOrder(
+    years,
+    minDate,
+    maxDate,
+    getYearControlProps
+  );
 
   const rows = years.map((yearsRow, rowIndex) => {
     const cells = yearsRow.map((year, cellIndex) => {
       const controlProps = getYearControlProps?.(year);
-      const isYearInTabOrder = dayjs(year).isSame(yearInTabOrder, 'year');
+      const isYearInTabOrder = dayjs(year).isSame(yearInTabOrder, "year");
       return (
         <td
           key={cellIndex}
-          {...getStyles('yearsListCell')}
+          {...getStyles("yearsListCell")}
           data-with-spacing={withCellSpacing || undefined}
         >
           <PickerControl
-            {...getStyles('yearsListControl')}
+            {...getStyles("yearsListControl")}
             size={size}
             unstyled={unstyled}
             data-mantine-stop-propagation={__stopPropagation || undefined}
@@ -148,25 +157,35 @@ export const YearsList = factory<YearsListFactory>((_props, ref) => {
             }}
             tabIndex={__preventFocus || !isYearInTabOrder ? -1 : 0}
           >
-            {dayjs(year).locale(ctx.getLocale(locale)).format(yearsListFormat)}
+            {isNepali
+              ? formatNepaliDate(year, yearsListFormat, ctx.getLocale(locale))
+              : dayjs(year)
+                  .locale(ctx.getLocale(locale))
+                  .format(yearsListFormat)}
           </PickerControl>
         </td>
       );
     });
 
     return (
-      <tr key={rowIndex} {...getStyles('yearsListRow')}>
+      <tr key={rowIndex} {...getStyles("yearsListRow")}>
         {cells}
       </tr>
     );
   });
 
   return (
-    <Box component="table" ref={ref} size={size} {...getStyles('yearsList')} {...others}>
+    <Box
+      component="table"
+      ref={ref}
+      size={size}
+      {...getStyles("yearsList")}
+      {...others}
+    >
       <tbody>{rows}</tbody>
     </Box>
   );
 });
 
 YearsList.classes = classes;
-YearsList.displayName = '@mantine/dates/YearsList';
+YearsList.displayName = "@mantine/dates/YearsList";

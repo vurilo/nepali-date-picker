@@ -84,6 +84,8 @@ export interface CalendarHeaderProps
 
   /** aria-label for level control */
   levelControlAriaLabel?: string;
+
+  isNepali?: boolean;
 }
 
 export type CalendarHeaderFactory = Factory<{
@@ -111,6 +113,7 @@ const varsResolver = createVarsResolver<CalendarHeaderFactory>((_, { size }) => 
 export const CalendarHeader = factory<CalendarHeaderFactory>((_props, ref) => {
   const props = useProps('CalendarHeader', defaultProps, _props);
   const {
+    isNepali,
     classNames,
     className,
     style,

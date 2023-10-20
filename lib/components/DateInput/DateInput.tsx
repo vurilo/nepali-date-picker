@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   BoxProps,
   StylesApiProps,
@@ -14,32 +14,38 @@ import {
   Popover,
   CloseButton,
   MantineSize,
-} from '@mantine/core';
-import { useDidUpdate } from '@mantine/hooks';
-import dayjs from 'dayjs';
-import { Calendar, CalendarBaseProps, CalendarStylesNames, pickCalendarProps } from '../Calendar';
-import { DecadeLevelSettings } from '../DecadeLevel';
-import { YearLevelSettings } from '../YearLevel';
-import { MonthLevelSettings } from '../MonthLevel';
-import { HiddenDatesInput } from '../HiddenDatesInput';
-import { assignTime } from '../../utils';
-import { DateValue, CalendarLevel } from '../../types';
-import { useDatesContext } from '../DatesProvider';
-import { isDateValid } from './is-date-valid/is-date-valid';
-import { dateStringParser } from './date-string-parser/date-string-parser';
-import { useUncontrolledDates } from '../../hooks';
+} from "@mantine/core";
+import { useDidUpdate } from "@mantine/hooks";
+import dayjs from "dayjs";
+import {
+  Calendar,
+  CalendarBaseProps,
+  CalendarStylesNames,
+  pickCalendarProps,
+} from "../Calendar";
+import { DecadeLevelSettings } from "../DecadeLevel";
+import { YearLevelSettings } from "../YearLevel";
+import { MonthLevelSettings } from "../MonthLevel";
+import { HiddenDatesInput } from "../HiddenDatesInput";
+import { assignTime } from "../../utils";
+import { DateValue, CalendarLevel } from "../../types";
+import { useDatesContext } from "../DatesProvider";
+import { isDateValid } from "./is-date-valid/is-date-valid";
+import { dateStringParser } from "./date-string-parser/date-string-parser";
+import { useUncontrolledDates } from "../../hooks";
+import { formatNepaliDate } from "../../utils/nepali-date";
 
 export type DateInputStylesNames = __InputStylesNames | CalendarStylesNames;
 
 export interface DateInputProps
   extends BoxProps,
-    Omit<__BaseInputProps, 'size'>,
+    Omit<__BaseInputProps, "size">,
     CalendarBaseProps,
     DecadeLevelSettings,
     YearLevelSettings,
     MonthLevelSettings,
     StylesApiProps<DateInputFactory>,
-    ElementProps<'input', 'size' | 'value' | 'defaultValue' | 'onChange'> {
+    ElementProps<"input", "size" | "value" | "defaultValue" | "onChange"> {
   /** Parses user input to convert it to Date object */
   dateParser?: (value: string) => Date | null;
 
@@ -53,13 +59,13 @@ export interface DateInputProps
   onChange?: (value: DateValue) => void;
 
   /** Props added to Popover component */
-  popoverProps?: Partial<Omit<PopoverProps, 'children'>>;
+  popoverProps?: Partial<Omit<PopoverProps, "children">>;
 
   /** Determines whether input value can be cleared, adds clear button to right section, false by default */
   clearable?: boolean;
 
   /** Props added to clear button */
-  clearButtonProps?: React.ComponentPropsWithoutRef<'button'>;
+  clearButtonProps?: React.ComponentPropsWithoutRef<"button">;
 
   /** Dayjs format to display input value, "MMMM D, YYYY" by default  */
   valueFormat?: string;
@@ -94,14 +100,15 @@ export type DateInputFactory = Factory<{
 }>;
 
 const defaultProps: Partial<DateInputProps> = {
-  valueFormat: 'MMMM D, YYYY',
+  valueFormat: "MMMM D, YYYY",
   fixOnBlur: true,
   preserveTime: true,
 };
 
 export const DateInput = factory<DateInputFactory>((_props, ref) => {
-  const props = useInputProps('DateInput', defaultProps, _props);
+  const props = useInputProps("DateInput", defaultProps, _props);
   const {
+    isNepali,
     inputProps,
     wrapperProps,
     value,
@@ -145,20 +152,25 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
   };
 
   const _dateParser = dateParser || defaultDateParser;
-  const _allowDeselect = allowDeselect !== undefined ? allowDeselect : clearable;
+  const _allowDeselect =
+    allowDeselect !== undefined ? allowDeselect : clearable;
 
   const formatValue = (val: Date) =>
-    val ? dayjs(val).locale(ctx.getLocale(locale)).format(valueFormat) : '';
+    val
+      ? isNepali
+        ? formatNepaliDate(val, valueFormat, ctx.getLocale(locale))
+        : dayjs(val).locale(ctx.getLocale(locale)).format(valueFormat)
+      : "";
 
   const [_value, setValue, controlled] = useUncontrolledDates({
-    type: 'default',
+    type: "default",
     value,
     defaultValue,
     onChange,
   });
 
   const [_date, setDate] = useUncontrolledDates({
-    type: 'default',
+    type: "default",
     value: date,
     defaultValue: defaultValue || defaultDate,
     onChange: onDateChange as any,
@@ -182,7 +194,7 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
     const val = event.currentTarget.value;
     setInputValue(val);
 
-    if (val.trim() === '' && clearable) {
+    if (val.trim() === "" && clearable) {
       setValue(null);
     } else {
       const dateValue = _dateParser(val);
@@ -211,12 +223,12 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
 
   const _getDayProps = (day: Date) => ({
     ...getDayProps?.(day),
-    selected: dayjs(_value!).isSame(day, 'day'),
+    selected: dayjs(_value!).isSame(day, "day"),
     onClick: () => {
       const valueWithTime = preserveTime ? assignTime(_value!, day) : day;
       const val =
         clearable && _allowDeselect
-          ? dayjs(_value!).isSame(day, 'day')
+          ? dayjs(_value!).isSame(day, "day")
             ? null
             : valueWithTime
           : valueWithTime;
@@ -235,7 +247,7 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
         tabIndex={-1}
         onClick={() => {
           setValue(null);
-          !controlled && setInputValue('');
+          !controlled && setInputValue("");
           setDropdownOpened(false);
         }}
         unstyled={unstyled}
@@ -244,7 +256,9 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
     ) : null);
 
   useDidUpdate(() => {
-    value !== undefined && !dropdownOpened && setInputValue(formatValue(value!));
+    value !== undefined &&
+      !dropdownOpened &&
+      setInputValue(formatValue(value!));
   }, [value]);
 
   return (
@@ -277,7 +291,10 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
               __staticSelector="DateInput"
             />
           </Popover.Target>
-          <Popover.Dropdown onMouseDown={(event) => event.preventDefault()} data-dates-dropdown>
+          <Popover.Dropdown
+            onMouseDown={(event) => event.preventDefault()}
+            data-dates-dropdown
+          >
             <Calendar
               __staticSelector="DateInput"
               __timezoneApplied
@@ -293,6 +310,7 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
               size={inputProps.size as MantineSize}
               date={_date!}
               onDateChange={setDate}
+              isNepali={isNepali}
             />
           </Popover.Dropdown>
         </Popover>
@@ -303,4 +321,4 @@ export const DateInput = factory<DateInputFactory>((_props, ref) => {
 });
 
 DateInput.classes = { ...Input.classes, ...Calendar.classes };
-DateInput.displayName = '@mantine/dates/DateInput';
+DateInput.displayName = "@mantine/dates/DateInput";

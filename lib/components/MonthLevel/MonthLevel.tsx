@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import React from 'react';
+import dayjs from "dayjs";
+import React from "react";
 import {
   Box,
   BoxProps,
@@ -8,29 +8,34 @@ import {
   ElementProps,
   useProps,
   Factory,
-} from '@mantine/core';
-import { Month, MonthSettings, MonthStylesNames } from '../Month';
+} from "@mantine/core";
+import { Month, MonthSettings, MonthStylesNames } from "../Month";
 import {
   CalendarHeader,
   CalendarHeaderSettings,
   CalendarHeaderStylesNames,
-} from '../CalendarHeader';
-import { useDatesContext } from '../DatesProvider';
+} from "../CalendarHeader";
+import { useDatesContext } from "../DatesProvider";
+import NepaliDate, { formatNepaliDate } from "../../utils/nepali-date";
 
-export type MonthLevelStylesNames = MonthStylesNames | CalendarHeaderStylesNames;
+export type MonthLevelStylesNames =
+  | MonthStylesNames
+  | CalendarHeaderStylesNames;
 
 export interface MonthLevelBaseSettings extends MonthSettings {
   /** dayjs label format to display month label or a function that returns month label based on month value, defaults to "MMMM YYYY" */
   monthLabelFormat?: string | ((month: Date) => React.ReactNode);
 }
 
-export interface MonthLevelSettings extends MonthLevelBaseSettings, CalendarHeaderSettings {}
+export interface MonthLevelSettings
+  extends MonthLevelBaseSettings,
+    CalendarHeaderSettings {}
 
 export interface MonthLevelProps
   extends BoxProps,
     MonthLevelSettings,
-    Omit<StylesApiProps<MonthLevelFactory>, 'classNames' | 'styles'>,
-    ElementProps<'div'> {
+    Omit<StylesApiProps<MonthLevelFactory>, "classNames" | "styles">,
+    ElementProps<"div"> {
   classNames?: Partial<Record<string, string>>;
   styles?: Partial<Record<string, React.CSSProperties>>;
   __staticSelector?: string;
@@ -43,6 +48,8 @@ export interface MonthLevelProps
 
   /** Determines whether days should be static, static days can be used to display month if it is not expected that user will interact with the component in any way  */
   static?: boolean;
+
+  isNepali?: boolean;
 }
 
 export type MonthLevelFactory = Factory<{
@@ -52,13 +59,14 @@ export type MonthLevelFactory = Factory<{
 }>;
 
 const defaultProps: Partial<MonthLevelProps> = {
-  monthLabelFormat: 'MMMM YYYY',
+  monthLabelFormat: "MMMM YYYY",
 };
 
 export const MonthLevel = factory<MonthLevelFactory>((_props, ref) => {
-  const props = useProps('MonthLevel', defaultProps, _props);
+  const props = useProps("MonthLevel", defaultProps, _props);
   const {
     // Month settings
+    isNepali,
     month,
     locale,
     firstDayOfWeek,
@@ -109,7 +117,7 @@ export const MonthLevel = factory<MonthLevelFactory>((_props, ref) => {
   const ctx = useDatesContext();
 
   const stylesApiProps = {
-    __staticSelector: __staticSelector || 'MonthLevel',
+    __staticSelector: __staticSelector || "MonthLevel",
     classNames,
     styles,
     unstyled,
@@ -117,25 +125,27 @@ export const MonthLevel = factory<MonthLevelFactory>((_props, ref) => {
   };
 
   const _nextDisabled =
-    typeof nextDisabled === 'boolean'
+    typeof nextDisabled === "boolean"
       ? nextDisabled
       : maxDate
-      ? !dayjs(month).endOf('month').isBefore(maxDate)
+      ? !dayjs(month).endOf("month").isBefore(maxDate)
       : false;
 
   const _previousDisabled =
-    typeof previousDisabled === 'boolean'
+    typeof previousDisabled === "boolean"
       ? previousDisabled
       : minDate
-      ? !dayjs(month).startOf('month').isAfter(minDate)
+      ? !dayjs(month).startOf("month").isAfter(minDate)
       : false;
 
   return (
     <Box data-month-level size={size} ref={ref} {...others}>
       <CalendarHeader
         label={
-          typeof monthLabelFormat === 'function'
+          typeof monthLabelFormat === "function"
             ? monthLabelFormat(month)
+            : isNepali
+            ? formatNepaliDate(month, monthLabelFormat, locale || ctx.locale)
             : dayjs(month)
                 .locale(locale || ctx.locale)
                 .format(monthLabelFormat)
@@ -155,6 +165,7 @@ export const MonthLevel = factory<MonthLevelFactory>((_props, ref) => {
         levelControlAriaLabel={levelControlAriaLabel}
         withNext={withNext}
         withPrevious={withPrevious}
+        isNepali={isNepali}
         {...stylesApiProps}
       />
 
@@ -180,6 +191,7 @@ export const MonthLevel = factory<MonthLevelFactory>((_props, ref) => {
         __stopPropagation={__stopPropagation}
         static={isStatic}
         withCellSpacing={withCellSpacing}
+        isNepali={isNepali}
         {...stylesApiProps}
       />
     </Box>
@@ -187,4 +199,4 @@ export const MonthLevel = factory<MonthLevelFactory>((_props, ref) => {
 });
 
 MonthLevel.classes = { ...Month.classes, ...CalendarHeader.classes };
-MonthLevel.displayName = '@mantine/dates/MonthLevel';
+MonthLevel.displayName = "@mantine/dates/MonthLevel";

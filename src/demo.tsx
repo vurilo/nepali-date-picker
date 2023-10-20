@@ -43,6 +43,7 @@ const Demo = () => {
                       computedColorScheme === "light" ? "dark" : "light"
                     )
                   }
+                  value={computedColorScheme}
                   variant="default"
                   size="sm"
                   aria-label="Toggle color scheme"

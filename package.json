@@ -82,8 +82,8 @@
     "vite-plugin-lib-inject-css": "^1.3.0"
   },
   "peerDependencies": {
-    "@mantine/core": "^7.1.5",
-    "@mantine/hooks": "^7.1.5",
+    "@mantine/core": "^7.3.2",
+    "@mantine/hooks": "^7.3.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },

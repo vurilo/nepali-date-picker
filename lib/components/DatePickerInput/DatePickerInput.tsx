@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BoxProps,
   StylesApiProps,
@@ -9,24 +9,27 @@ import {
   InputVariant,
   __InputStylesNames,
   MantineComponentStaticProperties,
-} from '@mantine/core';
-import { CalendarStylesNames, pickCalendarProps } from '../Calendar';
-import { useDatesInput } from '../../hooks';
-import { DatePicker, DatePickerBaseProps } from '../DatePicker';
-import { DatePickerType } from '../../types';
-import { getDefaultClampedDate, shiftTimezone } from '../../utils';
-import { PickerInputBase, DateInputSharedProps } from '../PickerInputBase';
-import { useDatesContext } from '../DatesProvider';
+} from "@mantine/core";
+import { CalendarStylesNames, pickCalendarProps } from "../Calendar";
+import { useDatesInput } from "../../hooks";
+import { DatePicker, DatePickerBaseProps } from "../DatePicker";
+import { DatePickerType } from "../../types";
+import { getDefaultClampedDate, shiftTimezone } from "../../utils";
+import { PickerInputBase, DateInputSharedProps } from "../PickerInputBase";
+import { useDatesContext } from "../DatesProvider";
 
-export type DatePickerInputStylesNames = __InputStylesNames | CalendarStylesNames;
+export type DatePickerInputStylesNames =
+  | __InputStylesNames
+  | CalendarStylesNames;
 
-export interface DatePickerInputProps<Type extends DatePickerType = 'default'>
+export interface DatePickerInputProps<Type extends DatePickerType = "default">
   extends BoxProps,
     DateInputSharedProps,
     DatePickerBaseProps<Type>,
     StylesApiProps<DatePickerInputFactory> {
   /** Dayjs format to display input value, "MMMM D, YYYY" by default  */
   valueFormat?: string;
+  placeholder?: string;
 }
 
 export type DatePickerInputFactory = Factory<{
@@ -37,22 +40,24 @@ export type DatePickerInputFactory = Factory<{
 }>;
 
 const defaultProps: Partial<DatePickerInputProps> = {
-  type: 'default',
-  valueFormat: 'MMMM D, YYYY',
+  type: "default",
+  valueFormat: "MMMM D, YYYY",
   closeOnChange: true,
   sortDates: true,
-  dropdownType: 'popover',
+  dropdownType: "popover",
 };
 
-type DatePickerInputComponent = (<Type extends DatePickerType = 'default'>(
-  props: DatePickerInputProps<Type> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+type DatePickerInputComponent = (<Type extends DatePickerType = "default">(
+  props: DatePickerInputProps<Type> & {
+    ref?: React.ForwardedRef<HTMLButtonElement>;
+  }
 ) => JSX.Element) & {
   displayName?: string;
 } & MantineComponentStaticProperties<DatePickerInputFactory>;
 
-export const DatePickerInput: DatePickerInputComponent = factory<DatePickerInputFactory>(
-  (_props, ref) => {
-    const props = useProps('DatePickerInput', defaultProps, _props);
+export const DatePickerInput: DatePickerInputComponent =
+  factory<DatePickerInputFactory>((_props, ref) => {
+    const props = useProps("DatePickerInput", defaultProps, _props);
     const {
       type,
       value,
@@ -73,14 +78,16 @@ export const DatePickerInput: DatePickerInputComponent = factory<DatePickerInput
       maxDate,
       vars,
       defaultDate,
+      placeholder,
       ...rest
     } = props;
 
-    const { resolvedClassNames, resolvedStyles } = useResolvedStylesApi<DatePickerInputFactory>({
-      classNames,
-      styles,
-      props,
-    });
+    const { resolvedClassNames, resolvedStyles } =
+      useResolvedStylesApi<DatePickerInputFactory>({
+        classNames,
+        styles,
+        props,
+      });
 
     const { calendarProps, others } = pickCalendarProps(rest);
 
@@ -104,7 +111,9 @@ export const DatePickerInput: DatePickerInputComponent = factory<DatePickerInput
       sortDates,
     });
 
-    const _defaultDate = Array.isArray(_value) ? _value[0] || defaultDate : _value || defaultDate;
+    const _defaultDate = Array.isArray(_value)
+      ? _value[0] || defaultDate
+      : _value || defaultDate;
     const ctx = useDatesContext();
 
     return (
@@ -122,6 +131,7 @@ export const DatePickerInput: DatePickerInputComponent = factory<DatePickerInput
         size={size!}
         variant={variant}
         dropdownType={dropdownType}
+        placeholder={placeholder}
         {...others}
         type={type as any}
         __staticSelector="DatePickerInput"
@@ -133,7 +143,12 @@ export const DatePickerInput: DatePickerInputComponent = factory<DatePickerInput
           type={type}
           value={_value}
           defaultDate={
-            _defaultDate || getDefaultClampedDate({ maxDate, minDate, timezone: ctx.getTimezone() })
+            _defaultDate ||
+            getDefaultClampedDate({
+              maxDate,
+              minDate,
+              timezone: ctx.getTimezone(),
+            })
           }
           onChange={setValue}
           locale={locale}
@@ -141,16 +156,16 @@ export const DatePickerInput: DatePickerInputComponent = factory<DatePickerInput
           styles={resolvedStyles}
           unstyled={unstyled}
           __staticSelector="DatePickerInput"
-          __stopPropagation={dropdownType === 'popover'}
+          __stopPropagation={dropdownType === "popover"}
           minDate={minDate}
           maxDate={maxDate}
-          date={shiftTimezone('add', calendarProps.date, ctx.getTimezone())}
+          placeholder={placeholder}
+          date={shiftTimezone("add", calendarProps.date, ctx.getTimezone())}
           __timezoneApplied
         />
       </PickerInputBase>
     );
-  }
-) as any;
+  }) as any;
 
 DatePickerInput.classes = { ...PickerInputBase.classes, ...DatePicker.classes };
-DatePickerInput.displayName = '@mantine/dates/DatePickerInput';
+DatePickerInput.displayName = "@mantine/dates/DatePickerInput";

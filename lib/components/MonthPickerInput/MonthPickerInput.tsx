@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BoxProps,
   StylesApiProps,
@@ -9,24 +9,31 @@ import {
   InputVariant,
   __InputStylesNames,
   MantineComponentStaticProperties,
-} from '@mantine/core';
-import { pickCalendarProps } from '../Calendar';
-import { useDatesInput } from '../../hooks';
-import { MonthPicker, MonthPickerBaseProps, MonthPickerStylesNames } from '../MonthPicker';
-import { DatePickerType } from '../../types';
-import { getDefaultClampedDate, shiftTimezone } from '../../utils';
-import { PickerInputBase, DateInputSharedProps } from '../PickerInputBase';
-import { useDatesContext } from '../DatesProvider';
+} from "@mantine/core";
+import { pickCalendarProps } from "../Calendar";
+import { useDatesInput } from "../../hooks";
+import {
+  MonthPicker,
+  MonthPickerBaseProps,
+  MonthPickerStylesNames,
+} from "../MonthPicker";
+import { DatePickerType } from "../../types";
+import { getDefaultClampedDate, shiftTimezone } from "../../utils";
+import { PickerInputBase, DateInputSharedProps } from "../PickerInputBase";
+import { useDatesContext } from "../DatesProvider";
 
-export type MonthPickerInputStylesNames = __InputStylesNames | MonthPickerStylesNames;
+export type MonthPickerInputStylesNames =
+  | __InputStylesNames
+  | MonthPickerStylesNames;
 
-export interface MonthPickerInputProps<Type extends DatePickerType = 'default'>
+export interface MonthPickerInputProps<Type extends DatePickerType = "default">
   extends BoxProps,
     DateInputSharedProps,
     MonthPickerBaseProps<Type>,
     StylesApiProps<MonthPickerInputFactory> {
   /** Dayjs format to display input value, "MMMM YYYY" by default  */
   valueFormat?: string;
+  placeholder?: string;
 }
 
 export type MonthPickerInputFactory = Factory<{
@@ -37,22 +44,24 @@ export type MonthPickerInputFactory = Factory<{
 }>;
 
 const defaultProps: Partial<MonthPickerInputProps> = {
-  type: 'default',
-  valueFormat: 'MMMM YYYY',
+  type: "default",
+  valueFormat: "MMMM YYYY",
   closeOnChange: true,
   sortDates: true,
-  dropdownType: 'popover',
+  dropdownType: "popover",
 };
 
-type MonthPickerInputComponent = (<Type extends DatePickerType = 'default'>(
-  props: MonthPickerInputProps<Type> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+type MonthPickerInputComponent = (<Type extends DatePickerType = "default">(
+  props: MonthPickerInputProps<Type> & {
+    ref?: React.ForwardedRef<HTMLButtonElement>;
+  }
 ) => JSX.Element) & {
   displayName?: string;
 } & MantineComponentStaticProperties<MonthPickerInputFactory>;
 
-export const MonthPickerInput: MonthPickerInputComponent = factory<MonthPickerInputFactory>(
-  (_props, ref) => {
-    const props = useProps('MonthPickerInput', defaultProps, _props);
+export const MonthPickerInput: MonthPickerInputComponent =
+  factory<MonthPickerInputFactory>((_props, ref) => {
+    const props = useProps("MonthPickerInput", defaultProps, _props);
     const {
       type,
       value,
@@ -71,15 +80,17 @@ export const MonthPickerInput: MonthPickerInputComponent = factory<MonthPickerIn
       sortDates,
       minDate,
       maxDate,
+      placeholder,
       vars,
       ...rest
     } = props;
 
-    const { resolvedClassNames, resolvedStyles } = useResolvedStylesApi<MonthPickerInputFactory>({
-      classNames,
-      styles,
-      props,
-    });
+    const { resolvedClassNames, resolvedStyles } =
+      useResolvedStylesApi<MonthPickerInputFactory>({
+        classNames,
+        styles,
+        props,
+      });
 
     const { calendarProps, others } = pickCalendarProps(rest);
 
@@ -125,7 +136,7 @@ export const MonthPickerInput: MonthPickerInputComponent = factory<MonthPickerIn
       >
         <MonthPicker
           {...calendarProps}
-          date={shiftTimezone('add', calendarProps.date, ctx.getTimezone())}
+          date={shiftTimezone("add", calendarProps.date, ctx.getTimezone())}
           size={size}
           variant={variant}
           type={type}
@@ -141,15 +152,17 @@ export const MonthPickerInput: MonthPickerInputComponent = factory<MonthPickerIn
           styles={resolvedStyles}
           unstyled={unstyled}
           __staticSelector="MonthPickerInput"
-          __stopPropagation={dropdownType === 'popover'}
+          __stopPropagation={dropdownType === "popover"}
           minDate={minDate}
           maxDate={maxDate}
           __timezoneApplied
         />
       </PickerInputBase>
     );
-  }
-) as any;
+  }) as any;
 
-MonthPickerInput.classes = { ...PickerInputBase.classes, ...MonthPicker.classes };
-MonthPickerInput.displayName = '@mantine/dates/MonthPickerInput';
+MonthPickerInput.classes = {
+  ...PickerInputBase.classes,
+  ...MonthPicker.classes,
+};
+MonthPickerInput.displayName = "@mantine/dates/MonthPickerInput";

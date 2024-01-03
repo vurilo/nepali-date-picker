@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BoxProps,
   StylesApiProps,
@@ -9,24 +9,31 @@ import {
   InputVariant,
   __InputStylesNames,
   MantineComponentStaticProperties,
-} from '@mantine/core';
-import { pickCalendarProps } from '../Calendar';
-import { useDatesInput } from '../../hooks';
-import { YearPicker, YearPickerBaseProps, YearPickerStylesNames } from '../YearPicker';
-import { DatePickerType } from '../../types';
-import { getDefaultClampedDate, shiftTimezone } from '../../utils';
-import { PickerInputBase, DateInputSharedProps } from '../PickerInputBase';
-import { useDatesContext } from '../DatesProvider';
+} from "@mantine/core";
+import { pickCalendarProps } from "../Calendar";
+import { useDatesInput } from "../../hooks";
+import {
+  YearPicker,
+  YearPickerBaseProps,
+  YearPickerStylesNames,
+} from "../YearPicker";
+import { DatePickerType } from "../../types";
+import { getDefaultClampedDate, shiftTimezone } from "../../utils";
+import { PickerInputBase, DateInputSharedProps } from "../PickerInputBase";
+import { useDatesContext } from "../DatesProvider";
 
-export type YearPickerInputStylesNames = __InputStylesNames | YearPickerStylesNames;
+export type YearPickerInputStylesNames =
+  | __InputStylesNames
+  | YearPickerStylesNames;
 
-export interface YearPickerInputProps<Type extends DatePickerType = 'default'>
+export interface YearPickerInputProps<Type extends DatePickerType = "default">
   extends BoxProps,
     DateInputSharedProps,
     YearPickerBaseProps<Type>,
     StylesApiProps<YearPickerInputFactory> {
   /** Dayjs format to display input value, "YYYY" by default  */
   valueFormat?: string;
+  placeholder?: string;
 }
 
 export type YearPickerInputFactory = Factory<{
@@ -37,22 +44,24 @@ export type YearPickerInputFactory = Factory<{
 }>;
 
 const defaultProps: Partial<YearPickerInputProps> = {
-  type: 'default',
-  valueFormat: 'YYYY',
+  type: "default",
+  valueFormat: "YYYY",
   closeOnChange: true,
   sortDates: true,
-  dropdownType: 'popover',
+  dropdownType: "popover",
 };
 
-type YearPickerInputComponent = (<Type extends DatePickerType = 'default'>(
-  props: YearPickerInputProps<Type> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+type YearPickerInputComponent = (<Type extends DatePickerType = "default">(
+  props: YearPickerInputProps<Type> & {
+    ref?: React.ForwardedRef<HTMLButtonElement>;
+  }
 ) => JSX.Element) & {
   displayName?: string;
 } & MantineComponentStaticProperties<YearPickerInputFactory>;
 
-export const YearPickerInput: YearPickerInputComponent = factory<YearPickerInputFactory>(
-  (_props, ref) => {
-    const props = useProps('YearPickerInput', defaultProps, _props);
+export const YearPickerInput: YearPickerInputComponent =
+  factory<YearPickerInputFactory>((_props, ref) => {
+    const props = useProps("YearPickerInput", defaultProps, _props);
     const {
       type,
       value,
@@ -71,15 +80,17 @@ export const YearPickerInput: YearPickerInputComponent = factory<YearPickerInput
       sortDates,
       minDate,
       maxDate,
+      placeholder,
       vars,
       ...rest
     } = props;
 
-    const { resolvedClassNames, resolvedStyles } = useResolvedStylesApi<YearPickerInputFactory>({
-      classNames,
-      styles,
-      props,
-    });
+    const { resolvedClassNames, resolvedStyles } =
+      useResolvedStylesApi<YearPickerInputFactory>({
+        classNames,
+        styles,
+        props,
+      });
 
     const { calendarProps, others } = pickCalendarProps(rest);
     const ctx = useDatesContext();
@@ -119,6 +130,7 @@ export const YearPickerInput: YearPickerInputComponent = factory<YearPickerInput
         size={size!}
         variant={variant}
         dropdownType={dropdownType}
+        placeholder={placeholder}
         {...others}
         type={type as any}
         __staticSelector="YearPickerInput"
@@ -132,8 +144,17 @@ export const YearPickerInput: YearPickerInputComponent = factory<YearPickerInput
           defaultDate={
             Array.isArray(_value)
               ? _value[0] ||
-                getDefaultClampedDate({ maxDate, minDate, timezone: ctx.getTimezone() })
-              : _value || getDefaultClampedDate({ maxDate, minDate, timezone: ctx.getTimezone() })
+                getDefaultClampedDate({
+                  maxDate,
+                  minDate,
+                  timezone: ctx.getTimezone(),
+                })
+              : _value ||
+                getDefaultClampedDate({
+                  maxDate,
+                  minDate,
+                  timezone: ctx.getTimezone(),
+                })
           }
           onChange={setValue}
           locale={locale}
@@ -141,16 +162,15 @@ export const YearPickerInput: YearPickerInputComponent = factory<YearPickerInput
           styles={resolvedStyles}
           unstyled={unstyled}
           __staticSelector="YearPickerInput"
-          __stopPropagation={dropdownType === 'popover'}
+          __stopPropagation={dropdownType === "popover"}
           minDate={minDate}
           maxDate={maxDate}
-          date={shiftTimezone('add', calendarProps.date, ctx.getTimezone())}
+          date={shiftTimezone("add", calendarProps.date, ctx.getTimezone())}
           __timezoneApplied
         />
       </PickerInputBase>
     );
-  }
-) as any;
+  }) as any;
 
 YearPickerInput.classes = { ...PickerInputBase.classes, ...YearPicker.classes };
-YearPickerInput.displayName = '@mantine/dates/YearPickerInput';
+YearPickerInput.displayName = "@mantine/dates/YearPickerInput";

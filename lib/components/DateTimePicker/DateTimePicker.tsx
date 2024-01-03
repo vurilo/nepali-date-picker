@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import React, { useRef, useState } from 'react';
+import dayjs from "dayjs";
+import React, { useRef, useState } from "react";
 import {
   BoxProps,
   StylesApiProps,
@@ -12,39 +12,42 @@ import {
   useResolvedStylesApi,
   ActionIcon,
   CheckIcon,
-} from '@mantine/core';
-import { useDisclosure, useDidUpdate, useMergedRef } from '@mantine/hooks';
-import { assignTime, shiftTimezone } from '../../utils';
-import { TimeInput, TimeInputProps } from '../TimeInput';
+} from "@mantine/core";
+import { useDisclosure, useDidUpdate, useMergedRef } from "@mantine/hooks";
+import { assignTime, shiftTimezone } from "../../utils";
+import { TimeInput, TimeInputProps } from "../TimeInput";
 import {
   pickCalendarProps,
   CalendarBaseProps,
   CalendarSettings,
   CalendarStylesNames,
-} from '../Calendar';
-import { DatePicker } from '../DatePicker';
+} from "../Calendar";
+import { DatePicker } from "../DatePicker";
 import {
   PickerInputBase,
   DateInputSharedProps,
   PickerInputBaseStylesNames,
-} from '../PickerInputBase';
-import { DateValue } from '../../types';
-import { useDatesContext } from '../DatesProvider';
-import classes from './DateTimePicker.module.css';
-import { useUncontrolledDates } from '../../hooks';
+} from "../PickerInputBase";
+import { DateValue } from "../../types";
+import { useDatesContext } from "../DatesProvider";
+import classes from "./DateTimePicker.module.css";
+import { useUncontrolledDates } from "../../hooks";
 
 export type DateTimePickerStylesNames =
-  | 'timeWrapper'
-  | 'timeInput'
-  | 'submitButton'
+  | "timeWrapper"
+  | "timeInput"
+  | "submitButton"
   | PickerInputBaseStylesNames
   | CalendarStylesNames;
 
 export interface DateTimePickerProps
   extends BoxProps,
-    Omit<DateInputSharedProps, 'classNames' | 'styles' | 'closeOnChange' | 'size'>,
-    Omit<CalendarBaseProps, 'defaultDate'>,
-    Omit<CalendarSettings, 'onYearMouseEnter' | 'onMonthMouseEnter'>,
+    Omit<
+      DateInputSharedProps,
+      "classNames" | "styles" | "closeOnChange" | "size"
+    >,
+    Omit<CalendarBaseProps, "defaultDate">,
+    Omit<CalendarSettings, "onYearMouseEnter" | "onMonthMouseEnter">,
     StylesApiProps<DateTimePickerFactory> {
   /** Dayjs format to display input value, "DD/MM/YYYY HH:mm" by default  */
   valueFormat?: string;
@@ -59,13 +62,17 @@ export interface DateTimePickerProps
   onChange?: (value: DateValue) => void;
 
   /** TimeInput component props */
-  timeInputProps?: TimeInputProps & { ref?: React.ComponentPropsWithRef<'input'>['ref'] };
+  timeInputProps?: TimeInputProps & {
+    ref?: React.ComponentPropsWithRef<"input">["ref"];
+  };
 
   /** Props passed down to the submit button */
-  submitButtonProps?: ActionIconProps & React.ComponentPropsWithoutRef<'button'>;
+  submitButtonProps?: ActionIconProps &
+    React.ComponentPropsWithoutRef<"button">;
 
   /** Determines whether seconds input should be rendered */
   withSeconds?: boolean;
+  placeholder?: string;
 }
 
 export type DateTimePickerFactory = Factory<{
@@ -76,11 +83,11 @@ export type DateTimePickerFactory = Factory<{
 }>;
 
 const defaultProps: Partial<DateTimePickerProps> = {
-  dropdownType: 'popover',
+  dropdownType: "popover",
 };
 
 export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
-  const props = useProps('DateTimePicker', defaultProps, _props);
+  const props = useProps("DateTimePicker", defaultProps, _props);
   const {
     value,
     defaultValue,
@@ -98,12 +105,13 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
     size,
     variant,
     dropdownType,
+    placeholder,
     vars,
     ...rest
   } = props;
 
   const getStyles = useStyles<DateTimePickerFactory>({
-    name: 'DateTimePicker',
+    name: "DateTimePicker",
     classes,
     props,
     classNames,
@@ -112,13 +120,15 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
     vars,
   });
 
-  const { resolvedClassNames, resolvedStyles } = useResolvedStylesApi<DateTimePickerFactory>({
-    classNames,
-    styles,
-    props,
-  });
+  const { resolvedClassNames, resolvedStyles } =
+    useResolvedStylesApi<DateTimePickerFactory>({
+      classNames,
+      styles,
+      props,
+    });
 
-  const _valueFormat = valueFormat || (withSeconds ? 'DD/MM/YYYY HH:mm:ss' : 'DD/MM/YYYY HH:mm');
+  const _valueFormat =
+    valueFormat || (withSeconds ? "DD/MM/YYYY HH:mm:ss" : "DD/MM/YYYY HH:mm");
 
   const timeInputRef = useRef<HTMLInputElement>();
   const timeInputRefMerged = useMergedRef(timeInputRef, timeInputProps?.ref);
@@ -130,22 +140,26 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
 
   const ctx = useDatesContext();
   const [_value, setValue] = useUncontrolledDates({
-    type: 'default',
+    type: "default",
     value,
     defaultValue,
     onChange,
   });
 
   const formatTime = (dateValue: Date) =>
-    dateValue ? dayjs(dateValue).format(withSeconds ? 'HH:mm:ss' : 'HH:mm') : '';
+    dateValue
+      ? dayjs(dateValue).format(withSeconds ? "HH:mm:ss" : "HH:mm")
+      : "";
 
   const [timeValue, setTimeValue] = useState(formatTime(_value!));
-  const [currentLevel, setCurrentLevel] = useState(level || defaultLevel || 'month');
+  const [currentLevel, setCurrentLevel] = useState(
+    level || defaultLevel || "month"
+  );
 
   const [dropdownOpened, dropdownHandlers] = useDisclosure(false);
   const formattedValue = _value
     ? dayjs(_value).locale(ctx.getLocale(locale)).format(_valueFormat)
-    : '';
+    : "";
 
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     timeInputProps?.onChange?.(event);
@@ -153,12 +167,17 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
     setTimeValue(val);
 
     if (val) {
-      const [hours, minutes, seconds] = val.split(':').map(Number);
-      const timeDate = shiftTimezone('add', new Date(), ctx.getTimezone());
+      const [hours, minutes, seconds] = val.split(":").map(Number);
+      const timeDate = shiftTimezone("add", new Date(), ctx.getTimezone());
       timeDate.setHours(hours);
       timeDate.setMinutes(minutes);
       timeDate.setSeconds(seconds || 0);
-      setValue(assignTime(timeDate, _value || shiftTimezone('add', new Date(), ctx.getTimezone())));
+      setValue(
+        assignTime(
+          timeDate,
+          _value || shiftTimezone("add", new Date(), ctx.getTimezone())
+        )
+      );
     }
   };
 
@@ -169,10 +188,12 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
     timeInputRef.current?.focus();
   };
 
-  const handleTimeInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleTimeInputKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     timeInputProps?.onKeyDown?.(event);
 
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       dropdownHandlers.close();
     }
@@ -186,11 +207,11 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
 
   useDidUpdate(() => {
     if (dropdownOpened) {
-      setCurrentLevel('month');
+      setCurrentLevel("month");
     }
   }, [dropdownOpened]);
 
-  const __stopPropagation = dropdownType === 'popover';
+  const __stopPropagation = dropdownType === "popover";
 
   return (
     <PickerInputBase
@@ -234,15 +255,15 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
         __timezoneApplied
       />
 
-      {currentLevel === 'month' && (
-        <div {...getStyles('timeWrapper')}>
+      {currentLevel === "month" && (
+        <div {...getStyles("timeWrapper")}>
           <TimeInput
             value={timeValue}
             withSeconds={withSeconds}
             ref={timeInputRefMerged}
             unstyled={unstyled}
             {...timeInputProps}
-            {...getStyles('timeInput', {
+            {...getStyles("timeInput", {
               className: timeInputProps?.className,
               style: timeInputProps?.style,
             })}
@@ -252,10 +273,10 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
             data-mantine-stop-propagation={__stopPropagation || undefined}
           />
 
-          <ActionIcon<'button'>
+          <ActionIcon<"button">
             variant="default"
-            size={`input-${size || 'sm'}`}
-            {...getStyles('submitButton', {
+            size={`input-${size || "sm"}`}
+            {...getStyles("submitButton", {
               className: submitButtonProps?.className,
               style: submitButtonProps?.style,
             })}
@@ -276,5 +297,9 @@ export const DateTimePicker = factory<DateTimePickerFactory>((_props, ref) => {
   );
 });
 
-DateTimePicker.classes = { ...classes, ...PickerInputBase.classes, ...DatePicker.classes };
-DateTimePicker.displayName = '@mantine/dates/DateTimePicker';
+DateTimePicker.classes = {
+  ...classes,
+  ...PickerInputBase.classes,
+  ...DatePicker.classes,
+};
+DateTimePicker.displayName = "@mantine/dates/DateTimePicker";

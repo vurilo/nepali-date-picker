@@ -6,20 +6,20 @@ settings:
 
 dependencies:
   '@mantine/core':
-    specifier: ^7.1.5
-    version: 7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^7.3.2
+    version: 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/dates':
-    specifier: ^7.1.5
-    version: 7.1.5(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^7.3.2
+    version: 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/hooks':
-    specifier: ^7.1.5
-    version: 7.1.5(react@18.2.0)
+    specifier: ^7.3.2
+    version: 7.5.3(react@18.2.0)
   '@tabler/icons-react':
     specifier: ^2.39.0
     version: 2.39.0(react@18.2.0)
   '@vurilo/nepali-date-picker':
     specifier: ^0.0.3
-    version: 0.0.3(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+    version: 0.0.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
   nepali-date-converter:
     specifier: ^3.3.1
     version: 3.3.1
@@ -1903,15 +1903,15 @@ packages:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
     dev: true
 
-  /@mantine/core@7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-4jBuy26V4Wdrt7r2dT6d3SKSyU9Gfzxp0ycVTBd2FUb6PvsI/xyZIn8T/aHsJFQ1L5p7IHPcJCIThbmBpVvVtA==}
+  /@mantine/core@7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Wvv6DJXI+GX9mmKG5HITTh/24sCZ0RoYQHdTHh0tOfGnEy+RleyhA82UjnMsp0n2NjfCISBwbiKgfya6b2iaFw==}
     peerDependencies:
-      '@mantine/hooks': 7.1.5
+      '@mantine/hooks': 7.5.3
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
       '@floating-ui/react': 0.24.8(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.1.5(react@18.2.0)
+      '@mantine/hooks': 7.5.3(react@18.2.0)
       clsx: 2.0.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -1923,25 +1923,25 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/dates@7.1.5(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-rvlOFcjTpYQ8SFBH8fPWeIaBTXfhZUg5Rq7ANBD/6jizWN9I9bZIXIBan6Q4fA2i90eU6u6tidzeIsr1s4fU7w==}
+  /@mantine/dates@7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-v6fFdW+7HAd7XsZFMJVMuFE2RHbQAVnsUNeP0/5h+H4qEj0soTmMvHPP8wXEed5v85r9CcEMGOGq1n6RFRpWHA==}
     peerDependencies:
-      '@mantine/core': 7.1.5
-      '@mantine/hooks': 7.1.5
-      dayjs: ^1.10.5
+      '@mantine/core': 7.5.3
+      '@mantine/hooks': 7.5.3
+      dayjs: '>=1.0.0'
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.1.5(react@18.2.0)
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.5.3(react@18.2.0)
       clsx: 2.0.0
       dayjs: 1.11.10
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@mantine/hooks@7.1.5(react@18.2.0):
-    resolution: {integrity: sha512-LuKlJ5VDLYBMcleyKcL6nvcJZQaeJF4mIU5ryEiucy7IleZoD+lqWwNC1VAAN1fsjBRQfhFtFoRihUdIy/vDCA==}
+  /@mantine/hooks@7.5.3(react@18.2.0):
+    resolution: {integrity: sha512-mFI448mAs12v8FrgSVhytqlhTVrEjIfd/PqPEfwJu5YcZIq4YZdqpzJIUbANnRrFSvmoQpDb1PssdKx7Ds35hw==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -3276,7 +3276,7 @@ packages:
       express: 4.18.2
       fs-extra: 11.1.1
       globby: 11.1.0
-      ip: 2.0.0
+      ip: 2.0.1
       lodash: 4.17.21
       open: 8.4.2
       pretty-hrtime: 1.0.3
@@ -4289,7 +4289,7 @@ packages:
       - typescript
     dev: true
 
-  /@vurilo/nepali-date-picker@0.0.2(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(react-dom@18.2.0)(react@18.2.0):
+  /@vurilo/nepali-date-picker@0.0.2(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-0UTCOVk9NMBHjcqeh9b+whSU45VU/8Z0Akucj1wausSx+pRsqOjCoocEA2tNvKj6FkjiigJm4y0xkMY0Uj/t+Q==}
     peerDependencies:
       '@mantine/core': ^7.1.5
@@ -4297,13 +4297,13 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
-      '@mantine/core': 7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.1.5(react@18.2.0)
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.5.3(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@vurilo/nepali-date-picker@0.0.3(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
+  /@vurilo/nepali-date-picker@0.0.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-MTmQhWkU9+Xt+zGbc42zN4hhDB4aOevmkdmFw896D1o2AMp1bmf6NeY399bG7TWV485pUutkIvlwiXiu+yA0qA==}
     peerDependencies:
       '@mantine/core': ^7.1.5
@@ -4311,11 +4311,11 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
-      '@mantine/core': 7.1.5(@mantine/hooks@7.1.5)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/dates': 7.1.5(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.1.5(react@18.2.0)
+      '@mantine/core': 7.5.3(@mantine/hooks@7.5.3)(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/dates': 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(dayjs@1.11.10)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.5.3(react@18.2.0)
       '@tabler/icons-react': 2.39.0(react@18.2.0)
-      '@vurilo/nepali-date-picker': 0.0.2(@mantine/core@7.1.5)(@mantine/hooks@7.1.5)(react-dom@18.2.0)(react@18.2.0)
+      '@vurilo/nepali-date-picker': 0.0.2(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       i: 0.3.7
       nepali-date-converter: 3.3.1
       npm: 10.2.1
@@ -6551,8 +6551,8 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
-  /ip@2.0.0:
-    resolution: {integrity: sha512-WKa+XuLG1A1R0UWhl2+1XQSi+fZWMsYKffMZTTYsiZaUD8k2yDAj5atimTUD2TZkyCkNEeYE5NhFZmupOGtjYQ==}
+  /ip@2.0.1:
+    resolution: {integrity: sha512-lJUL9imLTNi1ZfXT+DU6rBBdbiKGBuay9B6xGSPVjUeQwaH1RIGqef8RZkUtHioLmSNpPR5M4HVKJGm1j8FWVQ==}
     dev: true
 
   /ipaddr.js@1.9.1:
